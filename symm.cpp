@@ -14,17 +14,17 @@ class edcode {
     
     
     
-        edcode(int c, char** v){
-            argc = c;
-            argv = v;
-            string* files = new string[argc];
-            for (int i = 1; i < argc; i++)
-            {
-                files[i] = argv[i];
-                cout<<files[i];
-            }
-
+    edcode(int c, char** v){
+        argc = c;
+        argv = v;
+        files = new string[argc];
+        for (int i = 1; i < argc; i++)
+        {
+            files[i] = (string)argv[i];
+            cout<<files[i] << i << endl;
         }
+
+    }
 
     void encrypt(string file_name){
         string file = file_name;
@@ -77,8 +77,10 @@ class edcode {
     }
 
     void encrypt_all(){
+        cout<<"asdf";
         for (int i = 1; i < argc; i++)
         {
+            cout<<i;
             cout<<files[i];
         }
         
@@ -89,6 +91,8 @@ class edcode {
 
 int main(int argc, char* argv[]){
     edcode edcrypter(argc,argv);
+
+    cout << sizeof(edcrypter.files)/sizeof(edcrypter.files[0]) + "\n";
 
     char c;
     cout << "\n";
