@@ -1,4 +1,7 @@
+#ifndef ASYMETRIC_KEY_GET_H // include guard
+#define ASYMETRIC_KEY_GET_H
 #include <stdlib.h>
+#include<time.h>
 class asymetric_key_gen
 {
 private:
@@ -16,6 +19,7 @@ public:
 
 asymetric_key_gen::asymetric_key_gen(/* args */)
 {
+    srand(time(NULL));
 }
 
 asymetric_key_gen::~asymetric_key_gen()
@@ -23,6 +27,7 @@ asymetric_key_gen::~asymetric_key_gen()
 }
 
 int* asymetric_key_gen::generate_key_pair(){
+
     double p;
     double q;
     double n;
@@ -55,10 +60,13 @@ int* asymetric_key_gen::generate_key_pair(){
     }
 
 
-    int keys[2] = {e,d};
+    static int keys[2] = {e,d};
+
+    //std::cout<<keys[0]<<std::endl;
+    //std::cout<<keys[1];
 
 
-    
+    //public,private
     return keys;
 
 
@@ -77,3 +85,14 @@ int asymetric_key_gen::GCD(int x,int y){
     }
     
 }
+
+/*vector<int> aymetric_key_gen::encoder(string message,)
+{
+    vector<int> form;
+    // calling the encrypting function in encoding function
+    for (auto& letter : message)
+        form.push_back(encrypt((int)letter));
+    return form;
+}
+*/
+#endif

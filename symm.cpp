@@ -90,7 +90,7 @@ class edcode {
 
 
 int * create_key_pair(){
-    
+
 }
 
 
@@ -98,9 +98,21 @@ int * create_key_pair(){
 int main(int argc, char* argv[]){
     edcode edcrypter(argc,argv);
 
+    asymetric_key_gen key_generator;
+
+    int* keys = key_generator.generate_key_pair();
+    cout<<keys[0] <<endl;
+    cout<<keys[1];
+
     //cout << sizeof(edcrypter.files)/sizeof(edcrypter.files[0]) + "\n";
 
-    /*char c;
+    /*cout<<"enter your access level";
+    int level;
+    cin>>level;
+
+
+
+    char c;
     cout << "\n";
     cout << "Enter Your Choice : -> \n";
     cout << "1. encrypt \n";
@@ -130,6 +142,20 @@ int main(int argc, char* argv[]){
     }
     */
 
+}
+
+
+int verify_access_level(int level){
+    /*switch (level)
+    {
+    case 1:
+        int 23;
+        break;
+    
+    default:
+        break;
+    }
+    */
 }
 
 
