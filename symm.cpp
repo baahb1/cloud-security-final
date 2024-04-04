@@ -1,7 +1,7 @@
 #include<string>
 #include<iostream>
 #include<fstream>
-
+#include"asymetric_key_gen.h"
 using namespace std;
 
 class edcode {
@@ -89,12 +89,18 @@ class edcode {
 };
 
 
+int * create_key_pair(){
+    
+}
+
+
+
 int main(int argc, char* argv[]){
     edcode edcrypter(argc,argv);
 
-    cout << sizeof(edcrypter.files)/sizeof(edcrypter.files[0]) + "\n";
+    //cout << sizeof(edcrypter.files)/sizeof(edcrypter.files[0]) + "\n";
 
-    char c;
+    /*char c;
     cout << "\n";
     cout << "Enter Your Choice : -> \n";
     cout << "1. encrypt \n";
@@ -122,5 +128,12 @@ int main(int argc, char* argv[]){
             edcrypter.encrypt_all();
         }
     }
+    */
 
 }
+
+
+
+
+
+
