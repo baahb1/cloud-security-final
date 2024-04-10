@@ -2,6 +2,8 @@
 #define ASYMETRIC_KEY_GET_H
 #include <stdlib.h>
 #include<time.h>
+#include<vector>
+//#include <bits/stdc++.h>
 class asymetric_key_gen
 {
 private:
@@ -13,7 +15,12 @@ private:
 public:
     asymetric_key_gen(/* args */);
     ~asymetric_key_gen();
-    int* generate_key_pair();
+    double* generate_key_pair();
+    std::vector<int> encoder(int key,std::string message,int n);
+    std::string decoder(int priv_key,std::vector<int> encoded,int n);
+    long long int encrypt(int key,double message,int n);
+    long long int decrypt(int priv_key,int encrpyted_text,int n);
+
     int GCD(int x, int y);
 };
 
@@ -26,7 +33,7 @@ asymetric_key_gen::~asymetric_key_gen()
 {
 }
 
-int* asymetric_key_gen::generate_key_pair(){
+double* asymetric_key_gen::generate_key_pair(){
 
     double p;
     double q;
@@ -60,7 +67,7 @@ int* asymetric_key_gen::generate_key_pair(){
     }
 
 
-    static int keys[2] = {e,d};
+    static double keys[3] = {e,d,n};
 
     //std::cout<<keys[0]<<std::endl;
     //std::cout<<keys[1];
@@ -86,13 +93,47 @@ int asymetric_key_gen::GCD(int x,int y){
     
 }
 
-/*vector<int> aymetric_key_gen::encoder(string message,)
+
+
+
+std::vector<int> asymetric_key_gen::encoder(int key,std::string message, int n)
 {
-    vector<int> form;
+    std::vector<int> form;
     // calling the encrypting function in encoding function
     for (auto& letter : message)
-        form.push_back(encrypt((int)letter));
+        form.push_back(this->encrypt(key,(int)letter,n));
     return form;
 }
-*/
+std::string asymetric_key_gen::decoder(int priv_key,std::vector<int> encoded,int n)
+{
+    std::string s;
+    // calling the decrypting function decoding function
+    for (auto& num : encoded)
+        s += this->decrypt(priv_key, num, n);
+    return s;
+}
+
+
+
+
+long long int asymetric_key_gen::encrypt(int key,double message,int n){
+    int  l = key;
+    long long int encrypted_text = 1;
+    while (l--) {
+        encrypted_text *= (message);
+        encrypted_text %= n;
+    }
+    return encrypted_text;
+}
+
+long long int asymetric_key_gen::decrypt(int priv_key,int encrypted_text,int n){
+    int k = priv_key;
+    long long int decrypted = 1;
+    while (k--) {
+        decrypted *= encrypted_text;
+        decrypted %= n;
+    }
+    return decrypted;
+}
+
 #endif

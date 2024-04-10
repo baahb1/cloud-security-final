@@ -100,9 +100,24 @@ int main(int argc, char* argv[]){
 
     asymetric_key_gen key_generator;
 
-    int* keys = key_generator.generate_key_pair();
-    cout<<keys[0] <<endl;
-    cout<<keys[1];
+    double* keys = key_generator.generate_key_pair();
+
+    cout<<keys[0]<<endl;
+    cout<<keys[1]<<endl;
+    cout<<keys[2]<<endl;
+
+    std::string unencrypted_message = "Hello world message two  space";
+    cout << unencrypted_message<<endl;
+    
+    std::vector<int> encrypted_message = key_generator.encoder(keys[0],unencrypted_message,keys[2]);
+
+    for (auto& p : encrypted_message)
+        cout << p;
+    cout<<endl;
+
+    string message_end = key_generator.decoder(keys[1],encrypted_message,keys[2]);
+
+    cout << "final message " << message_end;
 
     //cout << sizeof(edcrypter.files)/sizeof(edcrypter.files[0]) + "\n";
 
