@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include<time.h>
 #include<vector>
+#include<string>
+#include<fstream>
+#include<iostream>
 //#include <bits/stdc++.h>
 class asymetric_key_gen
 {
@@ -20,6 +23,7 @@ public:
     std::string decoder(int priv_key,std::vector<int> encoded,int n);
     long long int encrypt(int key,double message,int n);
     long long int decrypt(int priv_key,int encrpyted_text,int n);
+    int encrypt_file(int key,std::string fileName, int n);
 
     int GCD(int x, int y);
 };
@@ -73,7 +77,7 @@ double* asymetric_key_gen::generate_key_pair(){
     //std::cout<<keys[1];
 
 
-    //public,private
+    //public,private,n
     return keys;
 
 
@@ -94,6 +98,43 @@ int asymetric_key_gen::GCD(int x,int y){
 }
 
 
+int asymetric_key_gen::encrypt_file(int key,std::string fileName, int n){
+    std::fstream fin,fout;
+
+    fin.open(fileName);
+    std::string message;
+
+
+    if (fin.is_open()){
+        char c;
+        std::string message;
+        while (fin >> std::noskipws >> c){
+            message +=c;
+        }
+
+        std::vector<int> encoded_message = encoder(key,message,n);
+
+
+        std::cout<<std::endl << "encoded" << std::endl;
+        for (auto& i : encoded_message)
+        {
+            std::cout << i;
+        }
+        
+
+        fin.close();
+
+        fout.open("security", std::ios::out | std::ios::trunc);
+
+        for (auto& p : encoded_message)
+            fout << p;
+        
+        return 1;
+    
+
+    }else
+    return 0;
+}
 
 
 std::vector<int> asymetric_key_gen::encoder(int key,std::string message, int n)
@@ -107,6 +148,13 @@ std::vector<int> asymetric_key_gen::encoder(int key,std::string message, int n)
 std::string asymetric_key_gen::decoder(int priv_key,std::vector<int> encoded,int n)
 {
     std::string s;
+
+    cout<<endl<<"decoder"<<endl;
+    for (auto& i: encoded)
+    {
+        std::cout<<i << ',';
+    }
+    
     // calling the decrypting function decoding function
     for (auto& num : encoded)
         s += this->decrypt(priv_key, num, n);
@@ -135,5 +183,7 @@ long long int asymetric_key_gen::decrypt(int priv_key,int encrypted_text,int n){
     }
     return decrypted;
 }
+
+
 
 #endif
