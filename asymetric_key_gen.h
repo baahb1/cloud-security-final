@@ -24,7 +24,7 @@ public:
     long long int encrypt(int key,double message,int n);
     long long int decrypt(int priv_key,int encrpyted_text,int n);
     int encrypt_file(int key,std::string fileName, int n);
-
+    int decrypt_file(int private_key,std::string filename,int n);
     int GCD(int x, int y);
 };
 
@@ -83,6 +83,45 @@ double* asymetric_key_gen::generate_key_pair(){
 
 }
 
+int asymetric_key_gen::decrypt_file(int private_key,std::string filename,int n){
+    std::fstream fin,fout;
+
+    fin.open(filename,std::fstream::in);
+
+    if (fin.is_open()){
+        char c;
+        std::vector<int> encrypted_message;
+        std::string s;
+        while (fin >> std::noskipws >> c){
+
+            if (c == ',')
+            {
+                encrypted_message.push_back(stoi(s));
+                s = "";
+            }else{
+              s+=c;  
+            }
+            
+            
+        }
+        fin.close();
+
+        std::string message =  this->decoder(private_key,encrypted_message,n);
+
+        fout.open(filename, std::ios::out | std::ios::trunc);
+
+        fout<<message;
+
+        fout.close();
+        
+        return 1;
+
+    }else{
+        return 0;
+    }
+
+}
+
 int asymetric_key_gen::GCD(int x,int y){
     int temp;
     while (true)
@@ -115,11 +154,11 @@ int asymetric_key_gen::encrypt_file(int key,std::string fileName, int n){
         std::vector<int> encoded_message = encoder(key,message,n);
 
 
-        std::cout<<std::endl << "encoded" << std::endl;
+        /*std::cout<<std::endl << "encoded" << std::endl;
         for (auto& i : encoded_message)
         {
             std::cout << i;
-        }
+        }*/
         
 
         fin.close();
@@ -127,7 +166,7 @@ int asymetric_key_gen::encrypt_file(int key,std::string fileName, int n){
         fout.open("security", std::ios::out | std::ios::trunc);
 
         for (auto& p : encoded_message)
-            fout << p;
+            fout << p << ',';
         
         return 1;
     
@@ -145,15 +184,13 @@ std::vector<int> asymetric_key_gen::encoder(int key,std::string message, int n)
         form.push_back(this->encrypt(key,(int)letter,n));
     return form;
 }
+
 std::string asymetric_key_gen::decoder(int priv_key,std::vector<int> encoded,int n)
 {
+    
     std::string s;
 
-    cout<<endl<<"decoder"<<endl;
-    for (auto& i: encoded)
-    {
-        std::cout<<i << ',';
-    }
+
     
     // calling the decrypting function decoding function
     for (auto& num : encoded)
@@ -183,6 +220,8 @@ long long int asymetric_key_gen::decrypt(int priv_key,int encrypted_text,int n){
     }
     return decrypted;
 }
+
+
 
 
 
