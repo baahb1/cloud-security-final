@@ -1,6 +1,7 @@
 #ifndef ASYMETRIC_KEY_GET_H // include guard
 #define ASYMETRIC_KEY_GET_H
 #include <stdlib.h>
+#include<iostream>
 #include<time.h>
 #include<vector>
 #include<string>
@@ -23,8 +24,8 @@ public:
     std::string decoder(int priv_key,std::vector<int> encoded,int n);
     long long int encrypt(int key,double message,int n);
     long long int decrypt(int priv_key,int encrpyted_text,int n);
-    int encrypt_file(int key,std::string fileName, int n);
-    int decrypt_file(int private_key,std::string filename,int n);
+    int encrypt_file(int key,std::string fileName, int n,int integrity_check);
+    int decrypt_file(int private_key,std::string filename,int n,int integrity_check);
     int GCD(int x, int y);
 };
 
@@ -83,7 +84,7 @@ double* asymetric_key_gen::generate_key_pair(){
 
 }
 
-int asymetric_key_gen::decrypt_file(int private_key,std::string filename,int n){
+int asymetric_key_gen::decrypt_file(int private_key,std::string filename,int n, int integrity_check){
     std::fstream fin,fout;
 
     fin.open(filename,std::fstream::in);
@@ -108,13 +109,28 @@ int asymetric_key_gen::decrypt_file(int private_key,std::string filename,int n){
 
         std::string message =  this->decoder(private_key,encrypted_message,n);
 
+        try
+        {
+            if (std::stoi(message.substr(0,std::to_string(integrity_check).length())) != integrity_check)
+            {
+                std::cout<<"The integrity check failed. File could have been tampered with \n";
+            }
+        }
+        catch(const std::exception& e)
+        {
+            std::cout<<"int cast failure in decryption file. double check integrity during integrity \n";
+        }
+        
+        
+        
+
         fout.open(filename, std::ios::out | std::ios::trunc);
 
         fout<<message;
 
         fout.close();
-        
-        return 1;
+
+    return 1;
 
     }else{
         return 0;
@@ -137,18 +153,53 @@ int asymetric_key_gen::GCD(int x,int y){
 }
 
 
-int asymetric_key_gen::encrypt_file(int key,std::string fileName, int n){
+/*takes a public key, a file name, and n value, and the integrity check integer, 
+*and encrypts the given file using the key and the n value.
+* returns 1 for success and 0 for failure. outputs
+*/
+int asymetric_key_gen::encrypt_file(int key,std::string fileName, int n,int integrity_check){
     std::fstream fin,fout;
 
     fin.open(fileName);
     std::string message;
 
+    
+    
+    char answer = 'y';
+    
 
-    if (fin.is_open()){
+
+    if (fin.is_open() && answer == 'y'){
         char c;
         std::string message;
         while (fin >> std::noskipws >> c){
             message +=c;
+        }
+
+
+        int integrity;
+        
+        try
+        {
+            integrity = std::stoi(message.substr(0,std::to_string(integrity_check).length()));
+        }
+
+        catch(const std::exception& e)
+        {
+            std::cout << e.what() << '\n';
+        }
+
+        if (integrity != integrity_check)
+        {
+            std::cout<<"file does not have intact integrity check. Are you sure you want to encrypt this file without it? y/n. \n";
+            
+            std::cin>> answer;
+
+            if (answer == 0)
+            {
+                return 0;
+            }
+            
         }
 
         std::vector<int> encoded_message = encoder(key,message,n);
@@ -163,7 +214,7 @@ int asymetric_key_gen::encrypt_file(int key,std::string fileName, int n){
 
         fin.close();
 
-        fout.open("security", std::ios::out | std::ios::trunc);
+        fout.open(fileName, std::ios::out | std::ios::trunc);
 
         for (auto& p : encoded_message)
             fout << p << ',';
